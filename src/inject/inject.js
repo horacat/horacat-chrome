@@ -22,12 +22,16 @@ function stripUrl() {
   return window.location.href.replace(/\#.*?$/, '');
 }
 
+function getMetaData(name) {
+  return $('meta[name="octolytics-dimension-' + name + '"]').attr('content');
+}
+
 function getIssue() {
   var issue_url = /github.com\/(.*?)\/(issues|pull)\/(\d+)$/.exec(stripUrl());
   if (!issue_url) {
     return;
   } else {
-    var issue_string = issue_url[1] + '#' + issue_url[3];
+    var issue_string = getMetaData('repository_id') + '#' + issue_url[3];
     var shaObj = new jsSHA(issue_string, "TEXT");
     var hash = shaObj.getHash("SHA-1", "HEX");
     logv('getIssue hashing:', issue_string, '->', hash);
@@ -36,19 +40,19 @@ function getIssue() {
 }
 
 function getProject() {
-  var project_url = /github.com\/(.*?)\/(issues|pull)\/(\d+)$/.exec(stripUrl());
-  if (!project_url) {
+  var project = getMetaData('repository_id');
+  if (!project) {
     return;
   } else {
-    var shaObj = new jsSHA(project_url[1], "TEXT");
+    var shaObj = new jsSHA(project, "TEXT");
     var hash = shaObj.getHash("SHA-1", "HEX");
-    logv('getProject hashing:', project_url[1], '->', hash);
+    logv('getProject hashing:', project, '->', hash);
     return hash;
   }
 }
 
 function getUser() {
-  var user = $('.name').find('img').attr('data-user'); // FIXME: too insecure?
+  var user = getMetaData('user_id'); // FIXME: too insecure?
   if (!user) {
     return;
   } else {
