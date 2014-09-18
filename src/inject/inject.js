@@ -23,24 +23,23 @@ function stripUrl() {
 }
 
 function getMetaData(name) {
-  return $('meta[name="octolytics-dimension-' + name + '"]').attr('content');
+  return $('meta[name="octolytics-' + name + '"]').attr('content');
 }
 
 function getIssue() {
-  var issue_url = /github.com\/(.*?)\/(issues|pull)\/(\d+)$/.exec(stripUrl());
-  if (!issue_url) {
+  var issue = $('input[name="thread_id"]').val();
+  if (!issue) {
     return;
   } else {
-    var issue_string = getMetaData('repository_id') + '#' + issue_url[3];
-    var shaObj = new jsSHA(issue_string, "TEXT");
+    var shaObj = new jsSHA(issue, "TEXT");
     var hash = shaObj.getHash("SHA-1", "HEX");
-    logv('getIssue hashing:', issue_string, '->', hash);
+    logv('getIssue hashing:', issue, '->', hash);
     return hash;
   }
 }
 
 function getProject() {
-  var project = getMetaData('repository_id');
+  var project = getMetaData('dimension-repository_id');
   if (!project) {
     return;
   } else {
@@ -52,7 +51,7 @@ function getProject() {
 }
 
 function getUser() {
-  var user = getMetaData('user_id'); // FIXME: too insecure?
+  var user = getMetaData('actor-hash'); // FIXME: too insecure?
   if (!user) {
     return;
   } else {
