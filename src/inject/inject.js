@@ -93,7 +93,7 @@ function HoracatButton(user, project, issue) {
     _this.logv('clicked');
     if (_this.started) {
       _this.stop();
-      _this.$.find('#horacat-toggle').text('Stop Timer');
+      _this.$.find('#horacat-toggle').text('Start Timer');
     } else {
       _this.start();
       _this.$.find('#horacat-toggle').text('Stop Timer');
