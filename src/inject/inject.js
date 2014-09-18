@@ -82,7 +82,7 @@ function HoracatButton(user, project, issue) {
   this.log = debug('horacat:button');
   this.logv = debug('horacat:button:verbose');
 
-  $('.gh-header-actions').prepend('<div class="gh-header-horacat" style="float: left; display: inline-block;"><span class="minibutton with-count">Log time</span><span id="horacat-timer" class="social-count">00:00:00</span></div>');
+  $('.gh-header-actions').prepend('<div class="gh-header-horacat" style="float: left; display: inline-block;"><span id="horacat-toggle" class="minibutton with-count">Start Timer</span><span id="horacat-timer" class="social-count">00:00:00</span></div>');
   this.timer = document.getElementById('horacat-timer'); // timer object
   this.$ = $('.gh-header-horacat'); // jQuery object
 
@@ -91,8 +91,13 @@ function HoracatButton(user, project, issue) {
   var _this = this;
   this.$.click(function() {
     _this.logv('clicked');
-    if (_this.started) _this.stop();
-    else _this.start();
+    if (_this.started) {
+      _this.stop();
+      _this.$.find('#horacat-toggle').text('Stop Timer');
+    } else {
+      _this.start();
+      _this.$.find('#horacat-toggle').text('Stop Timer');
+    }
   });
   this.log('initialized');
 }
