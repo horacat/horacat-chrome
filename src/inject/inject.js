@@ -1,8 +1,22 @@
 var log = debug('horacat'),
     logv = debug('horacat:verbose');
 
-debug.enable('horacat,horacat:*'); // TODO: make settable in options
-// non verbose: debug.enable('horacat,horacat:*,-horacat:verbose,-horacat:*:verbose');
+// TODO: make settable in options
+var verbosity = 3;
+switch (verbosity) {
+  case 0:
+    debug.enable('horacat');
+    break;
+  case 1:
+    debug.enable('horacat,horacat:*,-horacat:verbose,-horacat:*:verbose');
+    break;
+  case 2:
+    debug.enable('horacat,horacat:*,-horacat:*:verbose');
+    break;
+  case 3:
+    debug.enable('horacat,horacat:*');
+    break;
+}
 
 function stripUrl() {
   return window.location.href.replace(/\#.*?$/, '');
