@@ -62,6 +62,19 @@ function getUser() {
   }
 }
 
+function getUniqueId(user, project, issue) {
+  if (!user) user = getUser();
+  if (!project) project = getProject();
+  if (!issue) issue = getIssue();
+
+  var uniqueId = user + project + issue;
+  var shaObj = new jsSHA(uniqueId, "TEXT");
+  var hash = shaObj.getHash("SHA-1", "HEX");
+  logv('getUniqueId hashing:', uniqueId, '->', hash);
+
+  return hash;
+}
+
 function formatMs(s) {
 
   function addZ(n) {
@@ -88,23 +101,56 @@ function HoracatButton(user, project, issue) {
 
   this.started = false;
 
+  this.user = user;
+  this.project = project;
+  this.issue = issue;
+  this.uniqueId = getUniqueId(user, project, issue);
+
+  var lsData = localStorage.getItem('horacat.timer.' + this.uniqueId);
+  try {
+    lsData = JSON.parse(lsData);
+  } catch (err) {
+    lsData = null;
+  }
+  if (lsData && lsData.loggedTime) {
+    this.loggedTime = lsData.loggedTime;
+    this.startTime = (new Date() - this.loggedTime);
+    this.update();
+  }
+
   var _this = this;
   this.$.click(function() {
     _this.logv('clicked');
     if (_this.started) {
       _this.stop();
-      _this.$.find('#horacat-toggle').text('Start Timer');
     } else {
       _this.start();
-      _this.$.find('#horacat-toggle').text('Stop Timer');
     }
   });
+
+  $(window).unload(function(){
+    _this.stop();
+  });
+
   this.log('initialized');
 }
 
 HoracatButton.prototype.update = function update() {
   var time = formatMs(new Date() - this.startTime);
   this.timer.innerHTML = time;
+  
+  if (this.started) this.$.find('#horacat-toggle').text('Stop Timer');
+  else this.$.find('#horacat-toggle').text('Start Timer');
+};
+
+HoracatButton.prototype.store = function store() {
+  var name = "horacat.timer." + this.uniqueId;
+  var data = {
+    startTime: this.startTime,
+    loggedTime: this.loggedTime
+  };
+  localStorage.setItem(name, JSON.stringify(data));
+  this.log('stored:', name, '->', data);
 };
 
 HoracatButton.prototype.start = function start() {
@@ -115,6 +161,8 @@ HoracatButton.prototype.start = function start() {
   } else {
     this.startTime = new Date() - this.loggedTime;
   }
+
+  this.store();
 
   var _this = this;
   this.interval = setInterval(function () {
@@ -128,8 +176,11 @@ HoracatButton.prototype.stop = function stop() {
   this.started = false;
 
   this.loggedTime = new Date() - this.startTime;
+
+  this.store();
+
   clearInterval(this.interval);
-  this.log('stopped:', this.loggedTime);
+  this.logv('stopped:', this.loggedTime);
 };
 
 function init(user, project, issue) {
