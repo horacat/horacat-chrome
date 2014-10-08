@@ -138,7 +138,7 @@ function HoracatButton(user, project, issue) {
 HoracatButton.prototype.update = function update() {
   var time = formatMs(new Date() - this.startTime);
   this.timer.innerHTML = time;
-  
+
   if (this.started) this.$.find('#horacat-toggle').text('Stop Timer');
   else this.$.find('#horacat-toggle').text('Start Timer');
 };
