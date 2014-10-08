@@ -73,9 +73,9 @@ Log.prototype.getStop = function getStop() {
  */
 Log.prototype.set = function set(config) {
   if (config) {
-    if (config.user) this.user = user;
-    if (config.start) this.start = start;
-    if (config.stop) this.stop = stop;
+    if (config.user) this.setUser(config.user);
+    if (config.start) this.setStart(config.start);
+    if (config.stop) this.setStop(config.stop);
   }
 };
 
@@ -85,8 +85,8 @@ Log.prototype.set = function set(config) {
  */
 Log.prototype.get = function get() {
   return {
-    user: user,
-    start: start,
-    stop: stop
+    user: this.getUser(),
+    start: this.getStart(),
+    stop: this.getStop()
   };
 };
