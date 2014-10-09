@@ -2,9 +2,11 @@
  * Represents a (GitHub) issue
  * 
  * @class
+ * @param {string} hash Project hash/id
  * @param {object} config The data in the issue, see Issue.set() for more information
  */
-function Issue(config) {
+function Issue(hash, config) {
+  this.hash = hash;
   this.logs = [];
 
   this.set(config);
@@ -16,7 +18,7 @@ function Issue(config) {
  */
 Issue.prototype.setTimer = function setTimer(timer) {
   if (!timer instanceof Timer) {
-    throw new Error('Invalid type of argument \'timer\'. Expected: Timer');
+    timer = new Timer(timer);
   }
 
   this.timer = timer;
@@ -41,7 +43,7 @@ Issue.prototype.getTimer = function getTimer(raw) {
  */
 Issue.prototype.addLog = function addLog(log) {
   if (!log instanceof Log) {
-    throw new Error('Invalid type of argument \'log\'. Expected: Log');
+    log = new Log(log);
   }
 
   this.logs.push(log);
@@ -58,7 +60,7 @@ Issue.prototype.setLogs = function setLogs(logs) {
 
   for (var i=0; i < logs.length; i++) {
     if (!logs[i] instanceof Log) {
-      throw new Error('Invalid type of argument \'logs[' + i + ']\'. Expected: Log');
+      logs[i] = new Log(logs[i]);
     }
 
     this.addLog(logs[i]);
@@ -120,4 +122,12 @@ Issue.prototype.get = function get() {
     timer: this.getTimer(true),
     logs: this.getLogs(true)
   };
+};
+
+/**
+ * Get key of the issue (id)
+ * @return {string} Issue hash/id
+ */
+Issue.prototype.getKey = function getKey() {
+  return this.hash;
 };

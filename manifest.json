@@ -17,10 +17,15 @@
         "https://github.com/*/pull*"
       ],
       "js": [
-        "js/debug/debug.js",
-        "js/jquery/jquery.min.js",
-        "js/jssha/sha1.js",
-        "src/inject/inject.js"
+        "js/vendor/debug/debug.js",
+        "js/vendor/jquery/jquery.min.js",
+        "js/vendor/jssha/sha1.js",
+        "js/app/models/Log.js",
+        "js/app/models/Timer.js",
+        "js/app/models/Issue.js",
+        "js/app/models/Project.js",
+        "js/app/Storage.js",
+        "js/app/main.js"
       ]
     }
   ]

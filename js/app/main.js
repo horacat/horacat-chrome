@@ -1,3 +1,15 @@
+function Main() {
+  this.log = debug('horacat:main');
+  this.logv = debug('horacat:main:verbose');
+
+  this.logv('loading modules');
+
+  this.storage = new Storage();
+}
+
+Main();
+
+// TODO: refactor
 var log = debug('horacat'),
     logv = debug('horacat:verbose');
 
@@ -191,9 +203,9 @@ function init(user, project, issue) {
 }
 
 chrome.extension.sendMessage({}, function(response) {
-	var readyStateCheckInterval = setInterval(function() {
-	if (document.readyState === "complete") {
-		clearInterval(readyStateCheckInterval);
+  var readyStateCheckInterval = setInterval(function() {
+  if (document.readyState === "complete") {
+    clearInterval(readyStateCheckInterval);
 
     var user = getUser();
     var project = getProject();
@@ -204,6 +216,6 @@ chrome.extension.sendMessage({}, function(response) {
     } else {
       init(user, project, issue);
     }
-	}
-	}, 10);
+  }
+  }, 10);
 });
