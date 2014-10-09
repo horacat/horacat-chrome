@@ -1,0 +1,11 @@
+{
+  "startTimer": {
+    "message":"Timer starten"
+  },
+  "stopTimer": {
+    "message":"Timer stoppen"
+  },
+  "appDesc": {
+    "message":"Einfaches Zeitmanagement f&uuml;r github issues"
+  }
+}

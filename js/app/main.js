@@ -151,8 +151,8 @@ HoracatButton.prototype.update = function update() {
   var time = formatMs(new Date() - this.startTime);
   this.timer.innerHTML = time;
 
-  if (this.started) this.$.find('#horacat-toggle').text('Stop Timer');
-  else this.$.find('#horacat-toggle').text('Start Timer');
+  if (this.started) this.$.find('#horacat-toggle').text(chrome.i18n.getMessage('stopTimer'));
+  else this.$.find('#horacat-toggle').text(chrome.i18n.getMessage('startTimer'));
 };
 
 HoracatButton.prototype.store = function store() {
@@ -186,13 +186,13 @@ HoracatButton.prototype.start = function start() {
 
 HoracatButton.prototype.stop = function stop() {
   this.started = false;
-
   this.loggedTime = new Date() - this.startTime;
 
   this.store();
 
   clearInterval(this.interval);
   this.logv('stopped:', this.loggedTime);
+  this.update();
 };
 
 function init(user, project, issue) {
