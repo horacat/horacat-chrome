@@ -202,20 +202,26 @@ function init(user, project, issue) {
   var button = new HoracatButton(user, project, issue);
 }
 
-chrome.extension.sendMessage({}, function(response) {
-  var readyStateCheckInterval = setInterval(function() {
-  if (document.readyState === "complete") {
-    clearInterval(readyStateCheckInterval);
+// render button
+function renderButton() {
+  var user = getUser();
+  var project = getProject();
+  var issue = getIssue();
 
-    var user = getUser();
-    var project = getProject();
-    var issue = getIssue();
-
-    if (!user || !project || !issue) {
-      log('not logged in or no issue available, disabling time tracking');
-    } else {
-      init(user, project, issue);
-    }
+  if (!user || !project || !issue) {
+    log('not logged in or no issue available, disabling time tracking');
+  } else {
+    init(user, project, issue);
   }
-  }, 10);
+}
+
+// check for github "reloads"
+var observer = new MutationObserver(function(mutations) {
+  // check if button already exists
+  var button = $('.gh-header-horacat').get(0);
+  if (!button) {
+    // if not, render it
+    renderButton();
+  }
 });
+observer.observe(window.document, {childList: true, subtree: true});
